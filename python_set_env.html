@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="style.css" />
+		<title>Pythonゼミ資料</title>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	</head>
+
+	<body>
+		<article>
+			<header>
+				<h1>Python環境を整える</h1>
+				<p>自分のメモも兼ねて，Pythonゼミにて用いるツール，iPython notebookの環境の整え方を以下にまとめます．<br>
+				なぜ，htmlかというと，TeXでやるのが面倒くさくなってしまったからです．</p>
+			</header>
+			<section>
+				<h2>Windowsの場合</h2>
+					<p>WinPythonを入れたら一発．</p>
+					<ol type="1">
+						<li>WinPythonのダウンロード
+							<p>すでにPythonをインストールしてあっても，してなくても大丈夫．</p>
+							<p>以下のページから，WinPython3.xをダウンロード．</p>
+							<a href="http://winpython.sourceforge.net">WinPython</a>
+						<li>展開
+							<p>WInPython-64bit-3.x.x.x.exeを開く</p>
+							<img src="img/win/winp01.png" alt="winp01" />
+							<p>任意のディレクトリに展開したらいいと思います．</p>
+							<img src="img/win/winp03.png" alt="winp03" />
+						<li>起動
+							<p>展開できたら，展開先のディレクトリの中のWinPython Command Prompt.exeを起動してください．</p>
+							<img src="img/win/winp06.png" alt="winp06" />
+							<p>そうすると，黒い画面になるので，以下のように入力してください．</p>
+							<pre><code>ipython notebook</code></pre>
+							<img src="img/win/winp08.png" alt="winp08" />
+							<p>ブラウザが起動して，以下のような画面が出たらOK!</p>
+							<img src="img/win/winp09.png" alt="winp09" />
+					</ol>
+
+			</section>
+			<section>
+				<h2>Macの場合</h2>
+				<p>基本的にターミナル.appを使います．</p>
+				<h3>プロキシ設定</h3>
+					<p>大学から，諸々のパッケージをダウンロードするためにはプロキシを設定しないといけません．<br>
+				Rと同じようにhttp_proxyを設定したら良いだけです．</p>
+					<pre><code>export http_proxy=http://[yourID]:[yourPASS]@proxy.doshisha.ac.jp:8080</code></pre>
+					<p>以上のように設定したら，プロキシはオッケーです！</p>
+					<p>＊[yourID][yourPASS]はそれぞれ，大学発行のID，パスワードです．</p>
+
+					<p>ただ，以上のようにいちいち打つのは面倒くさいので，スクリプトにしてしましょう．<br>
+					次のようなテキストファイルを<a href="others/doshisha_proxy.sh">doshisha_proxy.sh</a>として保存しておきます．</p>
+					<pre><code>echo "Doshisha Proxy Setup"
+echo -n "ID :"
+read USERID
+echo -n "PAS:"
+read -s PASSWD
+
+HOST="proxy.doshisha.ac.jp"
+PORT="8080"
+
+export http_proxy="http://$USERID:$PASSWD@$HOST:$PORT"
+export https_proxy="http://$USERID:$PASSWD@$HOST:$PORT"
+export ftp_proxy="http://://$USERID:$PASSWD@$HOST:$PORT"
+
+echo "\nDone."
+</code></pre>
+					<p>そしたら，ターミナルで
+					<pre><code>source doshisha_proxy.sh</code></pre>と打ち込んで実行してあげると，
+					ID，パスワードが聞かれて，プロキシを設定できます．</p>
+
+				<h3>下準備</h3>
+					<p>下準備と言っても，パッケージ管理のツールをインストールするだけです．MacPortが入ってたら，Homebrewは入れないでください．</p>
+					<p>Xcode.appは入っている前提で話を進めています．インストールされていたなかったら，Mac App Storeからダウンロードしてください</p>
+					<ol type="1">
+						<li>
+							<p>Homebrewのインストール</p>
+							<p>
+							Python関係でいろいろインストールしないといけないので，
+							<a href="http://brew.sh/index_ja.html">Homebrew</a>
+							をインストールします．細かいところは，
+							<a href="http://brew.sh/index_ja.html">Homebrew</a>
+							のWebページを確認しましょう．<br>
+							ターミナルを起動して，以下のコマンドを実行．
+							</p>
+							<pre><code>ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</code></pre>
+						</li>
+						<li>
+							<p>brew doctor</p>
+							<p>ターミナルに以下を打ち込む</p>
+							<pre><code>brew doctor</code></pre>
+							<p>
+								すると，たくさんのWarningが出てきます．確か，Rをインストールしていると，いっぱい出てきた気がします．<br>
+								取り急ぎ，対応が必要なものは，アクセス権に関わるものだけなので，以下のページを参考にしたら，解消できます．
+							</p>
+							<a href="http://qiita.com/webbingstudio@github/items/fc02f8192e83130ddb33">
+								Homebrewをインストールしたときに出るWarningの対処
+							</a>
+						</li>
+					</ol>
+				<h3>パッケージのインストール</h3>
+					<p>Homebrewがうまく動いたら，今回のゼミに必要なツールを入れていきましょう．</p>
+					<ol type="1">
+						<li>Python3をインストールする．
+							<p>Macには標準でPythonが入っていますが，今回はPython 3.xベースで行くので，Python3をインストールします．
+							<br>以下をターミナルで実行．
+							</p>
+							<pre><code>brew install python3</code></pre>
+						<li>gccをインストールする．
+							<p>以下をターミナルで実行．</p>
+							<pre><code>brew install gcc</code></pre>
+						<li>pip3をインストールする．
+							<p>以下をターミナルで実行．</p>
+							<pre><code>curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python3</code></pre>
+							<p>Python2.x用のpipを入れるならhomebrewでpythonをインストールすればOK
+								<br>そのあとにpython3となっているところをpython2にしたらOK</p>
+							<p>Macでのpipのインストールが厄介っぽいので，
+								<a href="http://qiita.com/who_you_me/items/831d62f396e6d66dda66">ここ</a>
+								を参照．
+							</p>
+						<li>jupyterをインストールする．
+							<p>以下をターミナルにて実行．</p>
+							<pre><code>pip3 install jupyter</code></pre>
+						<li>numpyをインストールする．
+							<p>以下をターミナルにて実行．</p>
+							<pre><code>pip3 install numpy</code></pre>
+						<li>scipyをインストールする．
+							<p>以下をターミナルにて実行．</p>
+							<pre><code>pip3 install scipy</code></pre>
+						<li>matplotlibをインストールする．
+							<p>以下をターミナルにて実行．</p>
+							<pre><code>pip3 install matplotlib</code></pre>
+						<li>おわり．
+					</ol>
+				<h3>動作確認</h3>
+					<p>以下をターミナルにて実行．</p>
+					<pre><code>ipython notebook</code></pre>
+					<p>iPython notebookがブラウザで起動されたら，オッケー！</p>
+			</section>
+			<section>
+				<h2>Linux(Ubuntu)の場合</h2>
+					<p>Python3は入ってたと思うので，とりあえず，iPython notebookが動くようにすることが目標</p>
+
+					<h3>プロキシ設定</h3>
+					<p>大学で実行する場合は
+					<pre><code>sudo pip3 --proxy=http://[yourID]:[yourPASS]@proxy.doshisha.ac.jp:8080 install [package]</code></pre>
+					として，pipを使う．</p>
+
+					<h3>パッケージのインストール</h3>
+					<p>以下，インストールする必要のあるパッケージ</p>
+					<ol type="1">
+						<!--
+						<li>（Python3が入ってなかったら）Python3をインストールする
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo apt-get install python3</code></pre>
+							-->
+						<li>pip3をインストールする．
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo apt-get install python3-pip</code></pre>
+						<li>gfortranをインストールする．
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo apt-get install gfortran</code></pre>
+						<li>libblas-dev liblapack-devをインストールする．
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo apt-get install libblas-dev liblapack-dev</code></pre>
+							<p>これの実行でScipyのインストールがうまくいった</p>
+						<li>libpng-dev libjpeg8-dev libfreetype6-devをインストールする．
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo apt-get install libpng-dev libjpeg8-dev libfreetype6-dev</code></pre>
+							<p>これで，matplotlibのインストールがうまくいった</p>
+						<li>jupyterをインストールする．
+							<p>以下を端末にて実行．</p>
+							<pre><code>sudo pip3 install jupyter</code></pre>
+						<li>numpyをインストールする．
+							<p>以下を端末にて実行．</p>
+							<pre><code>sudo pip3 install numpy</code></pre>
+						<li>pandasをインストールする．
+							<p>以下を端末にて実行．</p>
+							<pre><code>sudo pip3 install pandas</code></pre>
+						<li>scipyをインストールする．
+							<p>以下を端末にて実行．</p>
+							<pre><code>sudo pip3 install scipy</code></pre>
+						<li>matplotlibをインストールする．
+							<p>以下を端末にて実行．</p>
+							<pre><code>sudo pip3 install matplotlib</code></pre>
+							<p>インストールに際してなんかうまくいかなかったから，
+							<a href="http://ng3rdstmadgke.hatenablog.com/entry/2015/10/14/144330">ここを参考</a>．
+							</p>
+						<li>おわり
+					</ol>
+					<h3>動作確認</h3>
+						<p>以下を端末にて実行．</p>
+						<pre><code>ipython notebook</code></pre>
+						<p>iPython notebookがブラウザで起動されたら，オッケー！</p>
+
+					
+			</section>
+			<!--
+			<section>
+				<h2>Linux(CuntOS7)の場合</h2>
+					<p>まず，ネットワーク設定を有効に，以下の画像の通り設定．ネットワークは有線に．</p>
+					<ol type="1">
+						<li>Python3をインストールする
+							<p>以下を端末にて実行，パスワードとか聞かれるので，適宜入力．</p>
+							<pre><code>sudo yum install python3</code></pre>
+							<p>多分うまくいかない，
+							次を参照
+							<a href="http://takeshiyako.blogspot.jp/2014/03/python3yumpip.html">これ</a>
+							</p>
+
+
+
+
+					</ol>
+			</section>
+			-->
+
+			<section>
+				<h2>iPython notebookのテスト</h2>
+					<p>ipython notebookのインストールが終わったら，Pythonゼミに耐えうるかどうか，テストします．</p>
+					<ol type="1">
+						<li>ノートの作成
+							<p>iPython Notebookが起動したら，ノートを作成します．</p>
+							<img src="img/make_notebook.png" alt="make_notebook" />
+							<p>Newメニューをクリックして，Python 3を選択．
+							すると，選択されているディレクトリにUntitled.ipynbが作成されます．</p>
+
+						<li>図を描く
+							<p>以下を実行して，図が表示されたら成功です！</p>
+							<iframe src="Untitled.html"></iframe>
+					</ol>
+			<footer>
+				<hr />
+				Copyright (C) 2015 Masaaki Okabe All Rights Reserved.
+			</footer>
+		</article>
+	</body>
+</html>

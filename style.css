@@ -1,0 +1,43 @@
+body {
+	background:#F9F9F9;
+	margin:0px 0px 0px 0px;
+	width:900px;
+}
+body a {
+	color:#090909;
+}
+header {
+	text-align:center;
+}
+header img{
+	width: 300px;
+	height: 300px;
+}
+article, section {
+	display:block;
+	margin: 25px;
+}
+section table {
+	margin:auto auto 0px auto;
+}
+section {
+	margin:0px 0px auto auto;
+}
+section h2{
+	background:#666688;
+	color:#EEEEEE;
+}
+section pre{
+	margin:10px 10px 10px 10px;
+	background:#101010;
+	color:#FFFFFF;
+}
+section iframe{
+	width:90%;
+	height: 600px
+}
+section img{
+	text-align: center;
+	width: 80%;
+	height: auto;
+}
